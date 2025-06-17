@@ -104,8 +104,11 @@ jobs:
 
           # Check if testSelector is testAssemblies
           if ("${{ inputs.testSelector }}" -eq "testAssemblies") {
+            # Replace '*' with '.*' in the testAssemblyVer2 input
+            $testAssemblyPattern = "${{ inputs.testAssemblyVer2 -replace '\*', '.*' }}"
+
             # Resolve test assemblies from the bin directory
-            $testAssemblies = Get-ChildItem -Path $workingDirectory -Recurse -File | Where-Object { $_.FullName -match "bin/.*/${{ inputs.configuration }}/.*${{ inputs.testAssemblyVer2.Replace('*', '.*') }}" } | ForEach-Object { $_.FullName }
+            $testAssemblies = Get-ChildItem -Path $workingDirectory -Recurse -File | Where-Object { $_.FullName -match "bin/.*/${{ inputs.configuration }}/.*$testAssemblyPattern" } | ForEach-Object { $_.FullName }
             if (-not $testAssemblies) {
               Write-Error "No test assemblies found matching the pattern '${{ inputs.testAssemblyVer2 }}'."
               exit 1
