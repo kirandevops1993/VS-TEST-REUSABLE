@@ -1,3 +1,5 @@
+Reusable:
+
 name: VSTest Reusable Workflow
 
 on:
@@ -105,7 +107,7 @@ jobs:
           # Check if testSelector is testAssemblies
           if ("${{ inputs.testSelector }}" -eq "testAssemblies") {
             # Resolve test assemblies from the bin directory
-            $testAssemblies = Get-ChildItem -Path $workingDirectory -Recurse -File | Where-Object { $_.FullName -match "bin/.*/${{ inputs.configuration }}/.*${{ inputs.testAssemblyVer2 }}" } | ForEach-Object { $_.FullName }
+            $testAssemblies = Get-ChildItem -Path $workingDirectory -Recurse -File | Where-Object { $_.FullName -match "bin/.+/Release/.+${{ inputs.testAssemblyVer2 }}" } | ForEach-Object { $_.FullName }
             if (-not $testAssemblies) {
               Write-Error "No test assemblies found matching the pattern '${{ inputs.testAssemblyVer2 }}'."
               exit 1
